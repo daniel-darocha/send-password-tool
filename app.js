@@ -26,7 +26,7 @@ function newEntry(opt1,opt2){
     new Password({code: opt1, pass: opt2}).save()
 };
 
-
+var companyName = "ITDen"
 
 
 
@@ -38,24 +38,27 @@ function newEntry(opt1,opt2){
 // GET Routes
 app.get("/", function(req,res){
 
-    res.render('home',{});
+    res.render('home',{companyName:companyName });
 });
 
 app.get("/sendpass",function (req,res) { 
 
-    res.render('create',{});
+    res.render('create',{companyName:companyName });
  });
 
  app.get("/getpass", function (req,res) { 
 
-    res.render('getPass',{});
+    res.render('getPass',{companyName:companyName });
   })
-
+app.get("/error", function (req,res){
+    res.render('error',{});
+})
 
 
 
 // POST Routes
 app.post("/sendpass-generate", function(req,res){
+    time = 120;
     var code = Math.floor(100000 + Math.random() * 900000)
     var pw = req.body.pw
     var opt1 = "Here's the code to retrieve your password!"
@@ -64,20 +67,35 @@ app.post("/sendpass-generate", function(req,res){
 
     newEntry(code, pw);
 
-    res.render("floating",{opt1: opt1, opt2: code});
+    res.render("floating",{opt1: opt1, opt2: code, companyName:companyName});
 });
 
 app.post("/getpass-generate", function(req,res){
-    const opt1 = "Here is your Password! please save it, it will be removed from the database in 120 Seconds!"
-    var code = req.body.pw
+    const opt1 = "Here is your Password! please save it, it will be removed from the database in "
+    var inputCode = req.body.pw
+
+   
+            Password.findOne({ 'code': inputCode }, 'code pass', function (err, password) {
+                if(err){
+                    console.log(err)
+                    res.redirect("/error")
+                }
+                if(password === null){
+                    res.redirect("/error")
+                }
+                else{
+                    console.log(password.pass)
+                    res.render("floating2",{opt1: opt1, opt2: password.pass, companyName:companyName}) };
+                    Password.deleteOne({ 'code': inputCode }, function (err) {
+                        if (err) return handleError(err);
+                      });
+              });
+        
+    
+
+    
   
-    Password.findOne({ 'code': code }, 'pass', function (err, Password) {
-        if (err){ return handleError(err)}
-        else {
-            console.log(Password.pass)
-            res.render("floating",{opt1: opt1, opt2: Password.pass})
-        }
-      });
+  
  
 });
 
