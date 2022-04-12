@@ -7,7 +7,7 @@ function countdown() {
 		setTimeout(countdown, 1000);
 	}
   if(timeLeft === 0){
-    window.location.assign("http://localhost:3000/"); 
+    window.location.assign("http://pass.b2bdev.net/"); 
   }
 };
 
