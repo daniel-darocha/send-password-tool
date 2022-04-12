@@ -26,7 +26,7 @@ function newEntry(opt1,opt2){
     new Password({code: opt1, pass: opt2}).save()
 };
 
-var companyName = "ITDen"
+var companyName = "B2B Dev Network"
 
 
 
