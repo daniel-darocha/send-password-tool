@@ -51,7 +51,7 @@ app.get("/sendpass",function (req,res) {
     res.render('getPass',{companyName:companyName });
   })
 app.get("/error", function (req,res){
-    res.render('error',{});
+    res.render('error',{companyName:companyName });
 })
 
 
