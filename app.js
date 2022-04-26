@@ -51,7 +51,7 @@ app.get("/sendpass",function (req,res) {
     res.render('getPass',{companyName:companyName });
   })
 app.get("/error", function (req,res){
-    res.render('error',{});
+    res.render('error',{companyName:companyName });
 })
 
 
@@ -74,7 +74,7 @@ app.post("/getpass-generate", function(req,res){
     const opt1 = "Here is your Password! please save it, it will be removed from the database in "
     var inputCode = req.body.pw
 
-   
+//    findOne in the Password schema. Find using inputcode var against 'code' key pair. With found document, check pass document key and render it in opt2 partial.
             Password.findOne({ 'code': inputCode }, 'code pass', function (err, password) {
                 if(err){
                     console.log(err)
