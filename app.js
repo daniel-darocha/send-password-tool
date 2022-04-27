@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
+const nodemailer = require("nodemailer");
 
 
 const app = express();
@@ -26,12 +27,13 @@ function newEntry(opt1,opt2){
     new Password({code: opt1, pass: opt2}).save()
 };
 
-var companyName = "ITDen"
+const companyName = "ITDen"
+const fromEmail = "mailer@iden.net"
+const hostName = "http://localhost:3000/"
 
 
 
-// Create new password document in Passwords Collection
-// new Password({code: 567999, pass: 'asd612sssa'}).save();
+
 
 // Global Constants & Variables
 
@@ -62,6 +64,7 @@ app.post("/sendpass-generate", function(req,res){
     var code = Math.floor(100000 + Math.random() * 900000)
     var pw = req.body.pw
     var opt1 = "Here's the code to retrieve your password!"
+
     console.log(pw)
     console.log(code);
 
@@ -90,13 +93,48 @@ app.post("/getpass-generate", function(req,res){
                         if (err) return handleError(err);
                       });
               });
-        
-    
+});
 
-    
+app.post("/sendMail", function(req,res){
+    console.log(req.body);
+
+// async..await is not allowed in global scope, must use a wrapper
+async function main() {
+    // Generate test SMTP service account from ethereal.email
+    // Only needed if you don't have a real mail account for testing
+    let testAccount = await nodemailer.createTestAccount();
   
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+      host: "smtp.ethereal.email",
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: testAccount.user, // generated ethereal user
+        pass: testAccount.pass, // generated ethereal password
+      },
+    });
   
- 
+    // send mail with defined transport object
+    let info = await transporter.sendMail({
+      from: "'"+companyName+"<"+fromEmail +">'", // sender address
+      to: req.body.email, // list of receivers
+      subject: "Here's your PassPass Code from "+companyName+"!", // Subject line
+    //   text: "Hello world?", // plain text body
+      html: "<h1>Hello! here's your code!</h1></br><h2>" + req.body.code + "</h2></br><p>Please go to <a href="+hostName+">"+hostName+"</a> with your code to retreive your password!</p>", // html body
+    });
+  
+    console.log("Message sent: %s", info.messageId);
+    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+  
+    // Preview only available when sending through an Ethereal account
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+  }
+  
+  main().catch(console.error);
+
+res.redirect("/");
 });
 
 app.listen(3000, function(){

@@ -8,6 +8,14 @@
         <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
           <h1 id="copyField"><%= opt2 %> </h1>
         </div>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
+          <form action="/sendMail" method="post">
+              <div class="input-group mb-3">
+                <input type="hidden" name="code" value=<%= opt2 %>>
+                  <input type="text" autocapitalize="off" class="form-control" placeholder="Email this code!" aria-label="Recipient's email" aria-describedby="button-addon2" name="email">
+                  <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Email</button>
+                </div>
+              <div id="passwordHelpBlock" class="form-text">
       </div>
       <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
       
