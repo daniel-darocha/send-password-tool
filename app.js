@@ -28,7 +28,7 @@ function newEntry(opt1,opt2){
 };
 
 const companyName = "ITDen"
-const fromEmail = "mailer@iden.net"
+const fromEmail = "mailer@itden.net"
 const hostName = "http://localhost:3000/"
 
 
@@ -109,6 +109,7 @@ async function main() {
       host: "itden-net.mail.protection.outlook.com",
       port: 25,
       secure: false, // true for 465, false for other ports
+      // auth: {user: '', pass: ''},
       // auth: {
       //   user: testAccount.user, // generated ethereal user
       //   pass: testAccount.pass, // generated ethereal password
